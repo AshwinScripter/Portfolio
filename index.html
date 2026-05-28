@@ -14,8 +14,31 @@
 <body>
 
 <canvas id="grid-canvas"></canvas>
+<div id="scroll-progress"></div>
+<div id="spotlight"></div>
 <div id="cursor"></div>
 <div id="cursor-trail"></div>
+<div id="slide-indicators" class="slide-indicators">
+  <button class="slide-dot" data-section="hero" onclick="scrollToSection('hero')" title="Hero"></button>
+  <button class="slide-dot" data-section="skills" onclick="scrollToSection('skills')" title="Skills"></button>
+  <button class="slide-dot" data-section="projects" onclick="scrollToSection('projects')" title="Projects"></button>
+  <button class="slide-dot" data-section="experience" onclick="scrollToSection('experience')" title="Experience"></button>
+  <button class="slide-dot" data-section="publications" onclick="scrollToSection('publications')" title="Research"></button>
+  <button class="slide-dot" data-section="education" onclick="scrollToSection('education')" title="Education"></button>
+  <button class="slide-dot" data-section="contact" onclick="scrollToSection('contact')" title="Contact"></button>
+</div>
+<div id="back-to-top" class="back-to-top" onclick="scrollToTop()"></div>
+<div class="floating-sidebar">
+  <a href="https://github.com/AshwinScripter" target="_blank" rel="noopener" title="GitHub">
+    <span>GH</span>
+  </a>
+  <a href="https://linkedin.com/in/ashwinsharma16092002" target="_blank" rel="noopener" title="LinkedIn">
+    <span>LI</span>
+  </a>
+  <a href="mailto:ashwin.works1609@gmail.com" title="Email">
+    <span>EM</span>
+  </a>
+</div>
 <div class="nav-backdrop" id="navBackdrop" onclick="closeMenu()"></div>
 
 <nav id="navbar">
