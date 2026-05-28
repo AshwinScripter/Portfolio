@@ -136,21 +136,14 @@ window.addEventListener('scroll',function(){
   lastScrollUpdate=now;
 },{passive:true});
 
-/* BACK TO TOP BUTTON */
-var backToTopBtn=document.getElementById('back-to-top');
-window.addEventListener('scroll',function(){
-  if(window.scrollY>400) backToTopBtn.classList.add('show');
-  else backToTopBtn.classList.remove('show');
-},{passive:true});
-function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
-
-/* ACTIVE NAV HIGHLIGHT */
+/* ACTIVE NAV HIGHLIGHT & SLIDE INDICATORS */
 var lastNavUpdate=0;
 window.addEventListener('scroll',function(){
   var now=Date.now();
   if(now-lastNavUpdate<200) return;
   var sections=document.querySelectorAll('section[id]');
   var navLinks=document.querySelectorAll('.nav-links a, .nav-drawer a');
+  var slideDots=document.querySelectorAll('.slide-dot');
   var current='';
   sections.forEach(function(section){
     if(window.scrollY>=section.offsetTop-200) current=section.getAttribute('id');
@@ -159,8 +152,20 @@ window.addEventListener('scroll',function(){
     link.classList.remove('active');
     if(link.getAttribute('href')==='#'+current) link.classList.add('active');
   });
+  slideDots.forEach(function(dot){
+    dot.classList.remove('active');
+    if(dot.getAttribute('data-section')===current) dot.classList.add('active');
+  });
   lastNavUpdate=now;
 },{passive:true});
+
+/* SCROLL TO SECTION */
+function scrollToSection(sectionId){
+  var section=document.getElementById(sectionId);
+  if(!section) return;
+  var navH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||70;
+  window.scrollTo({top:section.getBoundingClientRect().top+window.scrollY-navH,behavior:'smooth'});
+}
 
 /* 3D CARD TILT */
 if(!isMobile){
@@ -315,4 +320,152 @@ themeToggle.addEventListener('click',function(){
   var next=current==='dark'?'light':'dark';
   document.documentElement.setAttribute('data-theme',next);
   localStorage.setItem('theme',next);
+});
+
+/* INTERACTIVE TERMINAL */
+var terminalHistory=[];
+var terminalCommands={
+  'help':'Available commands: about, skills, projects, contact, clear, easter, github, follow',
+  'about':'Ashwin Sharma - B.Tech CSE grad from Bennett University. AI/ML Engineer. Building secure systems & smart solutions.',
+  'skills':'✦ Languages: Java, Python, C++, JavaScript\n✦ AI/ML: Deep Learning, NLP, Transfer Learning, XGBoost\n✦ Web: React, HTML5, CSS3\n✦ Security: APK Analysis, Steganography, InfoSec',
+  'projects':'01. MindSync - AI Voice Assistant with NLP\n02. APP APK Analyzer - Security Analysis Tool\n03. FakeLens - Image Forgery Detection\n04. QuantumSafe - Quantum Encryption Research',
+  'contact':'Email: ashwin.works1609@gmail.com\nLinkedIn: linkedin.com/in/ashwinsharma16092002\nGitHub: github.com/AshwinScripter',
+  'github':'Fetching GitHub stats... 🚀',
+  'follow':'Help you stand out? Follow: explore all sections + unlock achievements + check GitHub!',
+  'easter':'🎮 You found an easter egg! Type "skills" to see what makes you special!',
+  'clear':'Terminal cleared.'
+};
+
+var terminalOutput=document.getElementById('interactiveTerminal');
+var terminalInput=document.getElementById('terminalInput');
+var commandsExecuted=0;
+var sectionVisits=new Set();
+
+function addTerminalLine(prompt,text,isOutput){
+  var line=document.createElement('div');
+  line.className='terminal-line';
+  if(prompt){
+    var p=document.createElement('span');
+    p.className='terminal-prompt';
+    p.textContent='$';
+    line.appendChild(p);
+  }
+  var txt=document.createElement('span');
+  txt.className='terminal-text';
+  txt.textContent=text;
+  line.appendChild(txt);
+  terminalOutput.appendChild(line);
+  terminalOutput.scrollTop=terminalOutput.scrollHeight;
+}
+
+terminalInput.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    var cmd=terminalInput.value.trim().toLowerCase();
+    if(cmd){
+      addTerminalLine(true,cmd,false);
+      commandsExecuted++;
+      if(cmd==='clear'){
+        terminalOutput.innerHTML='';
+      } else if(terminalCommands[cmd]){
+        addTerminalLine(false,terminalCommands[cmd],true);
+        if(cmd==='github') fetchGitHubStats();
+      } else {
+        addTerminalLine(false,'Command not found. Type "help"',true);
+      }
+      terminalInput.value='';
+      if(commandsExecuted>=5) unlockAchievement('hacker');
+    }
+  }
+});
+
+/* GITHUB STATS */
+function fetchGitHubStats(){
+  fetch('https://api.github.com/users/AshwinScripter')
+    .then(r=>r.json())
+    .then(d=>{
+      document.getElementById('githubRepos').textContent=d.public_repos||'--';
+      document.getElementById('githubFollowers').textContent=d.followers||'--';
+      addTerminalLine(false,'GitHub stats loaded! 📊',true);
+    })
+    .catch(e=>{
+      addTerminalLine(false,'Could not fetch GitHub data',true);
+    });
+  fetch('https://api.github.com/users/AshwinScripter/repos')
+    .then(r=>r.json())
+    .then(d=>{
+      var stars=d.reduce((s,r)=>s+(r.stargazers_count||0),0);
+      document.getElementById('githubStars').textContent=stars;
+    })
+    .catch(e=>{});
+}
+
+window.addEventListener('load',function(){
+  setTimeout(fetchGitHubStats,1000);
+});
+
+/* ACHIEVEMENTS SYSTEM */
+var achievements={
+  'explorer':{title:'Explorer',desc:'Visit 3 sections',icon:'🔍'},
+  'hacker':{title:'Hacker',desc:'Execute 5 commands',icon:'💻'},
+  'collector':{title:'Collector',desc:'Unlock 5 achievements',icon:'🎯'},
+  'socialite':{title:'Socialite',desc:'Click 3 social links',icon:'🌐'},
+  'night-owl':{title:'Night Owl',desc:'Visit after 8 PM',icon:'🌙'},
+  'speedrunner':{title:'Speedrunner',desc:'Visit all sections in 30s',icon:'⚡'}
+};
+
+var unlockedAchievements=new Set(JSON.parse(localStorage.getItem('achievements')||'[]'));
+
+function unlockAchievement(id){
+  if(!unlockedAchievements.has(id)){
+    unlockedAchievements.add(id);
+    localStorage.setItem('achievements',JSON.stringify(Array.from(unlockedAchievements)));
+    var badge=document.querySelector('[data-achievement="'+id+'"]');
+    if(badge){
+      badge.classList.remove('locked');
+      badge.classList.add('unlocked');
+      console.log('🎉 Unlocked: '+achievements[id].title);
+      if(unlockedAchievements.size>=5) unlockAchievement('collector');
+    }
+  }
+}
+
+/* TRACK SECTION VISITS */
+document.querySelectorAll('section').forEach(function(sec){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        sectionVisits.add(e.target.id);
+        if(sectionVisits.size>=3) unlockAchievement('explorer');
+      }
+    });
+  },{threshold:0.3});
+  obs.observe(sec);
+});
+
+/* TRACK SOCIAL CLICKS */
+var socialClicks=0;
+document.querySelectorAll('.floating-sidebar a').forEach(function(link){
+  link.addEventListener('click',function(){
+    socialClicks++;
+    if(socialClicks>=3) unlockAchievement('socialite');
+  });
+});
+
+/* NIGHT OWL ACHIEVEMENT */
+var hour=new Date().getHours();
+if(hour>=20||hour<6) unlockAchievement('night-owl');
+
+/* SPEEDRUNNER ACHIEVEMENT */
+var visitStart=Date.now();
+setTimeout(function(){
+  if(sectionVisits.size>=7&&(Date.now()-visitStart)<30000) unlockAchievement('speedrunner');
+},30000);
+
+/* RESTORE ACHIEVEMENTS ON LOAD */
+unlockedAchievements.forEach(function(id){
+  var badge=document.querySelector('[data-achievement="'+id+'"]');
+  if(badge){
+    badge.classList.remove('locked');
+    badge.classList.add('unlocked');
+  }
 });
