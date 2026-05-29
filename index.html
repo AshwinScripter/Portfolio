@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=5.0"/>
   <title>Ashwin Sharma &mdash; Engineer &amp; Developer</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css">
@@ -13,21 +13,24 @@
 </head>
 <body>
 
+<div id="galaxy-nebula" aria-hidden="true">
+  <div class="sky-rays"></div>
+  <div class="sky-prism"></div>
+  <span class="ambient-cloud ambient-cloud-1"></span>
+  <span class="ambient-cloud ambient-cloud-2"></span>
+  <span class="ambient-cloud ambient-cloud-3"></span>
+  <span class="ambient-cloud ambient-cloud-4"></span>
+  <span class="ambient-sun"></span>
+  <span class="sky-orb sky-orb-1"></span>
+  <span class="sky-orb sky-orb-2"></span>
+  <span class="sky-orb sky-orb-3"></span>
+  <span class="sky-orb sky-orb-4"></span>
+</div>
 <canvas id="grid-canvas"></canvas>
 <div id="scroll-progress"></div>
 <div id="spotlight"></div>
 <div id="cursor"></div>
 <div id="cursor-trail"></div>
-<div id="slide-indicators" class="slide-indicators">
-  <button class="slide-dot" data-section="hero" onclick="scrollToSection('hero')" title="Hero"></button>
-  <button class="slide-dot" data-section="skills" onclick="scrollToSection('skills')" title="Skills"></button>
-  <button class="slide-dot" data-section="projects" onclick="scrollToSection('projects')" title="Projects"></button>
-  <button class="slide-dot" data-section="experience" onclick="scrollToSection('experience')" title="Experience"></button>
-  <button class="slide-dot" data-section="publications" onclick="scrollToSection('publications')" title="Research"></button>
-  <button class="slide-dot" data-section="education" onclick="scrollToSection('education')" title="Education"></button>
-  <button class="slide-dot" data-section="contact" onclick="scrollToSection('contact')" title="Contact"></button>
-  <button class="slide-dot" data-section="interactive-experience" onclick="scrollToSection('interactive-experience')" title="Interactive"></button>
-</div>
 <div class="floating-sidebar">
   <a href="https://github.com/AshwinScripter" target="_blank" rel="noopener" title="GitHub">
     <span>GH</span>
@@ -63,6 +66,7 @@
 </nav>
 
 <div class="nav-drawer" id="navDrawer">
+  <button class="drawer-close" aria-label="Close menu" onclick="closeMenu()">&times;</button>
   <ul>
     <li><a href="#hero" onclick="closeMenu()">About</a></li>
     <li><a href="#skills" onclick="closeMenu()">Skills</a></li>
@@ -108,48 +112,6 @@
 </section>
 
 <div class="glow-divider"></div>
-
-<!-- INTERACTIVE TERMINAL & ACHIEVEMENTS -->
-<section id="interactive-experience" style="position:relative;padding:var(--pad-section-v) var(--pad-section-h);background:linear-gradient(135deg,rgba(0,229,255,0.03),rgba(100,200,255,0.02));border-top:1px solid rgba(0,229,255,0.1)">
-  <div style="max-width:1200px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:2rem;opacity:0.8">
-      <p style="font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2)">🎮 Interactive Features</p>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:stretch;margin-bottom:3rem">
-      <!-- TERMINAL -->
-      <div class="fade-up" style="display:flex;flex-direction:column;gap:1rem">
-        <h3 style="font-size:1.2rem;margin-bottom:0.5rem;font-weight:600">💻 Terminal</h3>
-        <div class="interactive-terminal" id="interactiveTerminal">
-          <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-text">type 'help' to explore...</span></div>
-        </div>
-        <input type="text" id="terminalInput" class="terminal-input" placeholder="Enter command (help for list)..." autocomplete="off">
-      </div>
-      <!-- GITHUB STATS -->
-      <div class="fade-up" style="display:flex;flex-direction:column;gap:1rem">
-        <h3 style="font-size:1.2rem;margin-bottom:0.5rem;font-weight:600">📊 GitHub Stats</h3>
-        <div class="github-stats-widget" id="githubStats">
-          <div class="stat-item"><span class="stat-icon">⭐</span><span class="stat-text">Stars: <strong id="githubStars">--</strong></span></div>
-          <div class="stat-item"><span class="stat-icon">📚</span><span class="stat-text">Repos: <strong id="githubRepos">--</strong></span></div>
-          <div class="stat-item"><span class="stat-icon">👥</span><span class="stat-text">Followers: <strong id="githubFollowers">--</strong></span></div>
-          <div class="stat-item"><span class="stat-icon">🔥</span><span class="stat-text">Contributions: <strong id="githubContributions">--</strong></span></div>
-        </div>
-      </div>
-    </div>
-    <!-- ACHIEVEMENTS -->
-    <div class="fade-up">
-      <h3 style="font-size:1.2rem;margin-bottom:1.5rem;font-weight:600">🏆 Achievements</h3>
-      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem">Unlock badges by exploring the portfolio ✨</p>
-      <div class="achievements-grid" id="achievementsGrid">
-        <div class="achievement locked" data-achievement="explorer" title="Explore 3 sections"><span class="badge-icon">🔍</span><div class="badge-name">Explorer</div></div>
-        <div class="achievement locked" data-achievement="hacker" title="Type 5 terminal commands"><span class="badge-icon">💻</span><div class="badge-name">Hacker</div></div>
-        <div class="achievement locked" data-achievement="collector" title="Unlock 5 achievements"><span class="badge-icon">🎯</span><div class="badge-name">Collector</div></div>
-        <div class="achievement locked" data-achievement="socialite" title="Click 3 social links"><span class="badge-icon">🌐</span><div class="badge-name">Socialite</div></div>
-        <div class="achievement locked" data-achievement="night-owl" title="Visit after 8 PM"><span class="badge-icon">🌙</span><div class="badge-name">Night Owl</div></div>
-        <div class="achievement locked" data-achievement="speedrunner" title="Visit all sections in 30s"><span class="badge-icon">⚡</span><div class="badge-name">Speedrunner</div></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section id="skills">
   <div class="section-header fade-up">
@@ -314,7 +276,7 @@
       <div class="form-row"><label class="form-label" for="fmessage">Message</label><textarea class="form-textarea" id="fmessage" placeholder="Tell me what's on your mind..." required></textarea></div>
       <div class="form-buttons">
         <button class="form-submit" id="sendBtn" onclick="sendEmail()">&#9889; Send Message</button>
-        <a href="/Users/ashwinsharma/Developer/Portfolio/resume/resume.pdf" download class="form-submit resume-btn" style="text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">&#9109; Download Resume</a>
+        <a href="resume/resume.pdf" download="Ashwin-Sharma-Resume.pdf" type="application/pdf" class="form-submit resume-btn" style="text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">&#9109; Download Resume</a>
       </div>
       <div class="form-msg" id="formMsg"></div>
       <div class="emailjs-note">Powered by <a href="https://www.emailjs.com" target="_blank">EmailJS</a>. See the <a href="#" onclick="toggleSetup(event)">setup guide</a> to activate.</div>
